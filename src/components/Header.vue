@@ -15,8 +15,9 @@ export default defineComponent({
       <img src="../assets/logo.png" width="120" height="40" />
     </div>
     <div class="links">
-      <a>Username</a>
-      <Button text="Logout" width="100px" height="30px" bgColor="#282828" fgColor="#02BB86" borderRadius="15px" />
+      <a>Practice Mode</a>
+      <Button text="Home" width="80px" height="30px" bgColor="#282828" fgColor="#02BB86" borderRadius="15px"
+        fontSize="14px" />
     </div>
   </div>
 </template>
@@ -41,7 +42,7 @@ export default defineComponent({
 
 .links a {
   text-decoration: none;
-  color: white;
+  color: #606C6A;
   text-align: center;
   padding: 12px;
 }

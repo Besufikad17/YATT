@@ -1,4 +1,7 @@
 <script>
+
+import HomeIcon from './icons/Home.vue';
+
 export default {
   props: {
     text: String,
@@ -6,7 +9,11 @@ export default {
     height: String,
     bgColor: String,
     fgColor: String,
-    borderRadius: String
+    borderRadius: String,
+    fontSize: String,
+  },
+  components: {
+    HomeIcon
   },
   setup(props) {
     console.log(props.text, props.width)
@@ -19,6 +26,7 @@ export default {
         'background-color': this.bgColor,
         'color': this.fgColor,
         'border-radius': this.borderRadius,
+        'font-size': this.fontSize,
       }
     }
   }
@@ -26,7 +34,9 @@ export default {
 </script>
 
 <template>
-  <button :style="cssVars">{{ text }}</button>
+  <button :style="cssVars">
+    <HomeIcon /> {{ text }}
+  </button>
 </template>
 
 <style scoped>
