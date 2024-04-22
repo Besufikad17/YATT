@@ -1,0 +1,13 @@
+@font-face {
+  font-family: system-ui;
+}
+
+* {
+  font-family: "system-ui";  
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #121716
+}
