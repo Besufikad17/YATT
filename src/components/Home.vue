@@ -1,18 +1,87 @@
-<script setup lang="ts">
+<script lang="ts">
 import Header from "./Header.vue";
 import Timer from "./Timer.vue";
+
+export default {
+  data() {
+    return {
+      input: "",
+      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+      color: "",
+      index: 0,
+      timer: 60,
+      specialKeys: ["Meta", "Shift", "Control", "Alt", "Escape", "PageUp", "PageDown", "Home", "End", "ArrowUp", "ArrowDown", "ArrowRight", "ArrowLeft", "Tab", "CapsLock", "Delete", "Insert", "Pause", "ScrollLock"]
+    }
+  },
+  methods: {
+    onKeyPressed(key) {
+      if (this.specialKeys.indexOf(key) === -1 && this.timer > 0) {
+        if (key === "Backspace") {
+          this.erase();
+        } else {
+          this.input = this.input + key;
+          this.index++;
+          this.getLetterColor(key, this.index);
+        }
+      }
+    },
+    erase() {
+      if (this.input.length > 0 && this.index > 0) {
+        this.input = this.input.slice(0, this.input.length - 1);
+        this.index--;
+      }
+    },
+    getLetterColor(char, index) {
+      console.log(char, index, this.text[index - 1]);
+      if (index > this.input.length) {
+        this.color = "#606C6A";
+      } else if (this.text[index - 1] === char) {
+        this.color = "#02BB86";
+      } else {
+        this.color = "#FF6668";
+      }
+    },
+    updateTimer() {
+      this.timer--;
+    }
+  },
+  components: {
+    Header,
+    Timer
+  },
+  mounted() {
+    let self = this;
+    window.addEventListener('keyup', function (ev) {
+      self.onKeyPressed(ev.key);
+    });
+  }
+}
 </script>
 
 <template>
   <Header />
   <div class="container">
-    <Timer />
+    <Timer :updateTimer="this.updateTimer" />
+    <div class="p-container">
+      <p>
+        <span v-for="(char, index) in input" :key="index" :style="{ color: color }">{{ char }}</span>
+        <span v-for="(char, index2) in text.slice(index, text.length)" style="color: #606C6A;">{{ char }}</span>
+      </p>
+    </div>
   </div>
 </template>
 
 <style scoped>
 .container {
   display: flex;
+  flex-direction: column;
   justify-content: center;
+  align-items: center;
+}
+
+.p-container {
+  margin-top: 50px;
+  width: 800px;
+  padding: auto;
 }
 </style>

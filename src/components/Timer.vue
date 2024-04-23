@@ -1,5 +1,8 @@
 <script>
 export default {
+  props: {
+    updateTimer: Function
+  },
   data() {
     return {
       timer: 60
@@ -10,6 +13,7 @@ export default {
       if (this.timer > 0) {
         setTimeout(() => {
           this.timer -= 1
+          this.updateTimer()
           this.countDownTimer()
         }, 1000)
       }
