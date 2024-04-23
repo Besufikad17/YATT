@@ -1,6 +1,5 @@
 <script lang="ts">
 import Header from "./Header.vue";
-import Timer from "./Timer.vue";
 import ReloadIcon from "./icons/Reload.vue";
 
 export default {
@@ -15,6 +14,15 @@ export default {
     }
   },
   methods: {
+    countDownTimer() {
+      if (this.timer > 0) {
+        setTimeout(() => {
+          this.timer -= 1
+          this.updateTimer()
+          this.countDownTimer()
+        }, 1000)
+      }
+    },
     onKeyPressed(key) {
       if (this.specialKeys.indexOf(key) === -1 && this.timer > 0) {
         if (key === "Backspace") {
@@ -46,14 +54,18 @@ export default {
       this.timer--;
     },
     reset() {
+      console.log("rest called");
+      this.input = "";
       this.index = 0;
       this.timer = 60;
     }
   },
   components: {
     Header,
-    Timer,
     ReloadIcon
+  },
+  created() {
+    this.countDownTimer()
   },
   mounted() {
     let self = this;
@@ -67,14 +79,17 @@ export default {
 <template>
   <Header />
   <div class="container">
-    <Timer :updateTimer="this.updateTimer" />
+    <div class="timer-parent">
+      <p class="timer-header">TIMER</p>
+      <p class="timer">{{ timer > 9 ? timer : "0" + timer }}</p>
+    </div>
     <div class="p-container">
       <p>
         <span v-for="(char, index) in input" :key="index" :style="{ color: color }">{{ char }}</span>
         <span v-for="(char, index2) in text.slice(index, text.length)" style="color: #606C6A;">{{ char }}</span>
       </p>
     </div>
-    <div class="control-container" onclick="this.reset">
+    <div class="control-container" @click="this.reset">
       <ReloadIcon />
       <span class="restart">Start Over</span>
     </div>
@@ -82,6 +97,24 @@ export default {
 </template>
 
 <style scoped>
+.timer-parent {
+  display: flex;
+  flex-direction: column;
+  justify-items: center;
+}
+
+.timer-header {
+  color: #f2f2f2;
+  font-size: 20px;
+  margin: 0;
+}
+
+.timer {
+  color: #606C6A;
+  font-size: 56px;
+  margin: 0;
+}
+
 .container {
   display: flex;
   flex-direction: column;
