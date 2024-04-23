@@ -7,18 +7,17 @@ export default {
     return {
       input: "",
       text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-      color: "",
       index: 0,
       timer: 60,
+      isPaused: true,
       specialKeys: ["Meta", "Shift", "Control", "Alt", "Escape", "PageUp", "PageDown", "Home", "End", "ArrowUp", "ArrowDown", "ArrowRight", "ArrowLeft", "Tab", "CapsLock", "Delete", "Insert", "Pause", "ScrollLock"]
     }
   },
   methods: {
     countDownTimer() {
-      if (this.timer > 0) {
+      if (this.timer > 0 && !this.isPaused) {
         setTimeout(() => {
           this.timer -= 1
-          this.updateTimer()
           this.countDownTimer()
         }, 1000)
       }
@@ -30,7 +29,6 @@ export default {
         } else {
           this.input = this.input + key;
           this.index++;
-          this.getLetterColor(key, this.index);
         }
       }
     },
@@ -41,20 +39,19 @@ export default {
       }
     },
     getLetterColor(char, index) {
-      console.log(char, index, this.text.slice(0, index));
       if (index > this.input.length) {
-        this.color = "#606C6A";
-      } else if (this.text[index - 1] === char && this.input === this.text.slice(0, index)) {
-        this.color = "#02BB86";
+        return "#606C6A";
+      } else if (this.text[index] == char) {
+        return "#02BB86";
       } else {
-        this.color = "#FF6668";
+        return "#FF6668";
       }
     },
     updateTimer() {
       this.timer--;
     },
     reset() {
-      console.log("rest called");
+      this.isPaused = true;
       this.input = "";
       this.index = 0;
       this.timer = 60;
@@ -70,7 +67,13 @@ export default {
   mounted() {
     let self = this;
     window.addEventListener('keyup', function (ev) {
-      self.onKeyPressed(ev.key);
+      if (self.specialKeys.indexOf(ev.key) === -1 && self.timer > 0) {
+        if (self.isPaused) {
+          self.isPaused = false;
+          self.countDownTimer();
+        }
+        self.onKeyPressed(ev.key);
+      }
     });
   }
 }
@@ -85,7 +88,8 @@ export default {
     </div>
     <div class="p-container">
       <p>
-        <span v-for="(char, index) in input" :key="index" :style="{ color: color }">{{ char }}</span>
+        <span v-for="(char, index) in input" :key="index" :style="{ 'color': this.getLetterColor(char, index) }">{{ char
+          }}</span>
         <span v-for="(char, index2) in text.slice(index, text.length)" style="color: #606C6A;">{{ char }}</span>
       </p>
     </div>
