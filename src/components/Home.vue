@@ -1,6 +1,7 @@
 <script lang="ts">
 import Header from "./Header.vue";
 import Timer from "./Timer.vue";
+import ReloadIcon from "./icons/Reload.vue";
 
 export default {
   data() {
@@ -32,10 +33,10 @@ export default {
       }
     },
     getLetterColor(char, index) {
-      console.log(char, index, this.text[index - 1]);
+      console.log(char, index, this.text.slice(0, index));
       if (index > this.input.length) {
         this.color = "#606C6A";
-      } else if (this.text[index - 1] === char) {
+      } else if (this.text[index - 1] === char && this.input === this.text.slice(0, index)) {
         this.color = "#02BB86";
       } else {
         this.color = "#FF6668";
@@ -43,11 +44,16 @@ export default {
     },
     updateTimer() {
       this.timer--;
+    },
+    reset() {
+      this.index = 0;
+      this.timer = 60;
     }
   },
   components: {
     Header,
-    Timer
+    Timer,
+    ReloadIcon
   },
   mounted() {
     let self = this;
@@ -68,6 +74,10 @@ export default {
         <span v-for="(char, index2) in text.slice(index, text.length)" style="color: #606C6A;">{{ char }}</span>
       </p>
     </div>
+    <div class="control-container" onclick="this.reset">
+      <ReloadIcon />
+      <span class="restart">Start Over</span>
+    </div>
   </div>
 </template>
 
@@ -83,5 +93,24 @@ export default {
   margin-top: 50px;
   width: 800px;
   padding: auto;
+}
+
+.control-container {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  margin-top: 40px;
+}
+
+.restart {
+  color: #f2f2f2;
+  font-size: 24px;
+  margin-left: 4px;
+}
+
+.control-container:hover {
+  cursor: pointer;
+  border-radius: 25px;
+  box-shadow: rgba(242, 242, 242, 0.35) 0px 5px 15px;
 }
 </style>

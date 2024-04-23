@@ -15,9 +15,6 @@ export default {
   components: {
     HomeIcon
   },
-  setup(props) {
-    console.log(props.text, props.width)
-  },
   computed: {
     cssVars() {
       return {
