@@ -1,11 +1,9 @@
-<script>
-export default {
-  props: {
-    speed: Number,
-    accuracy: Number,
-    close: Function,
-  }
-}
+<script setup lang="ts">
+  defineProps<{
+    speed: number,
+    accuracy: number,
+    close: () => void
+  }>();
 </script>
 
 <template>

@@ -1,8 +1,9 @@
-<script>
+<script lang="ts">
 
 import HomeIcon from './icons/Home.vue';
+import { defineComponent } from "vue";
 
-export default {
+export default defineComponent({
   props: {
     text: String,
     width: String,
@@ -27,11 +28,11 @@ export default {
       }
     }
   }
-}
+})
 </script>
 
 <template>
-  <button :style="cssVars">
+  <button :style="(cssVars)">
     <HomeIcon /> {{ text }}
   </button>
 </template>

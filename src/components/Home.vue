@@ -26,7 +26,7 @@ export default {
       }
 
     },
-    onKeyPressed(key) {
+    onKeyPressed(key: string) {
       if (this.specialKeys.indexOf(key) === -1 && this.timer > 0) {
         if (key === "Backspace") {
           this.erase();
@@ -45,7 +45,7 @@ export default {
         this.index--;
       }
     },
-    getLetterColor(char, index) {
+    getLetterColor(char: string, index: number) {
       if (index > this.input.length) {
         return "#606C6A";
       } else if (this.text[index] == char) {
@@ -100,18 +100,18 @@ export default {
     </div>
     <div class="p-container">
       <p>
-        <span v-for="(char, index) in input" :key="index" :style="{ 'color': this.getLetterColor(char, index) }">{{ char
+        <span v-for="(char, index) in input" :key="index" :style="{ 'color': getLetterColor(char, index) }">{{ char
           }}</span>
-        <span v-for="(char, index2) in text.slice(index, text.length)" style="color: #606C6A;">{{ char }}</span>
+        <span v-for="(char, _) in text.slice(index, text.length)" style="color: #606C6A;">{{ char }}</span>
       </p>
     </div>
-    <div class="control-container" @click="this.reset">
+    <div class="control-container" @click="reset">
       <ReloadIcon />
       <span class="restart">Start Over</span>
     </div>
-    <dialog :open="dialog || this.timer == 0">
-      <Result :close="closeDialog" :speed="(this.input.split(' ').length)"
-        :accuracy="((this.input.length - this.errors) / this.text.length) * 100" />
+    <dialog :open="dialog || timer == 0">
+      <Result :close="closeDialog" :speed="(input.split(' ').length)"
+        :accuracy="((input.length - errors) / text.length) * 100" />
     </dialog>
   </div>
 </template>

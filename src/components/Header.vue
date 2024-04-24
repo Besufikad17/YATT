@@ -1,4 +1,4 @@
-<script scoped>
+<script scoped lang="ts">
 import Button from "./Button.vue";
 import { defineComponent } from 'vue';
 
