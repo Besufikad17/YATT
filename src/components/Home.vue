@@ -1,15 +1,18 @@
 <script lang="ts">
 import Header from "./Header.vue";
+import Result from "./Result.vue";
 import ReloadIcon from "./icons/Reload.vue";
 
 export default {
   data() {
     return {
-      input: "",
-      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
       index: 0,
+      errors: 0,
       timer: 60,
       isPaused: true,
+      dialog: false,
+      input: "",
+      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
       specialKeys: ["Meta", "Shift", "Control", "Alt", "Escape", "PageUp", "PageDown", "Home", "End", "ArrowUp", "ArrowDown", "ArrowRight", "ArrowLeft", "Tab", "CapsLock", "Delete", "Insert", "Pause", "ScrollLock"]
     }
   },
@@ -21,6 +24,7 @@ export default {
           this.countDownTimer()
         }, 1000)
       }
+
     },
     onKeyPressed(key) {
       if (this.specialKeys.indexOf(key) === -1 && this.timer > 0) {
@@ -28,6 +32,9 @@ export default {
           this.erase();
         } else {
           this.input = this.input + key;
+          if (key !== this.text[this.index]) {
+            this.errors++;
+          }
           this.index++;
         }
       }
@@ -55,10 +62,15 @@ export default {
       this.input = "";
       this.index = 0;
       this.timer = 60;
+    },
+    closeDialog() {
+      this.dialog = false;
+      this.reset();
     }
   },
   components: {
     Header,
+    Result,
     ReloadIcon
   },
   created() {
@@ -97,6 +109,10 @@ export default {
       <ReloadIcon />
       <span class="restart">Start Over</span>
     </div>
+    <dialog :open="dialog || this.timer == 0">
+      <Result :close="closeDialog" :speed="(this.input.split(' ').length)"
+        :accuracy="((this.input.length - this.errors) / this.text.length) * 100" />
+    </dialog>
   </div>
 </template>
 
@@ -124,6 +140,13 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+dialog {
+  background-color: #121716;
+  border-style: none;
+  border-radius: 25px;
+  box-shadow: rgba(241, 241, 241, 0.24) 0px 3px 8px;
 }
 
 .p-container {
