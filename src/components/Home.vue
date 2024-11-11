@@ -8,7 +8,7 @@
   const index = ref(0);
   const errors = ref(0);
   const timer = ref(60);
-  const isPaused = ref(false);
+  const isPaused = ref(true);
   const dialog = ref(false);
   const input = ref("");
 
@@ -32,6 +32,9 @@
         }
         index.value++;
       }
+    }else {
+      isPaused.value = true;
+      dialog.value = true;
     }
   }
 
@@ -80,85 +83,26 @@
 
 <template>
  <DefaultLayout>
-   <div class="container">
-     <div class="timer-parent">
-       <p class="timer-header">TIMER</p>
-       <p class="timer">{{ timer > 9 ? timer : "0" + timer }}</p>
-     </div>
-     <div class="p-container">
-       <p>
-         <span v-for="(char, index) in input" :key="index" :style="{ 'color': getLetterColor(char, index) }">{{ char
-           }}</span>
-         <span v-for="(char, _) in TEXT.slice(index, TEXT.length)" style="color: #606C6A;">{{ char }}</span>
-       </p>
-     </div>
-     <div class="control-container" @click="reset">
-       <Icon icon="mdi:reload" />
-       <span class="restart">Start Over</span>
-     </div>
-     <dialog :open="dialog || timer == 0">
-       <Result :close="closeDialog" :speed="(input.split(' ').length)"
-         :accuracy="((input.length - errors) / TEXT.length) * 100" />
-     </dialog>
+   <div class="flex flex-col items-center justify-center bg-primary-950 gap-12 w-full min-h-[calc(100vh-64px)]">
+      <div class="flex flex-col justify-center">
+        <p class="text-gray-50">TIMER</p>
+        <p class="text-gray-300 text-4xl">{{ timer > 9 ? timer : "0" + timer }}</p>
+      </div>
+      <div class="w-2/3 p-4">
+        <p>
+          <span v-for="(char, index) in input" :key="index" :style="{ 'color': getLetterColor(char, index) }">{{ char
+            }}</span>
+          <span v-for="(char, _) in TEXT.slice(index, TEXT.length)" style="color: #606C6A;">{{ char }}</span>
+        </p>
+      </div>
+      <button class="flex items-center gap-2 rounded-md border-2 border-black bg-primary-500 p-4 text-2xl hover:-translate-y-3 active:translate-x-0 active:translate-y-0 transition-all" @click="reset">
+        <Icon icon="mdi:reload" />        
+        Start Over 
+      </button>
+      <dialog :open="dialog || timer == 0" class="w-1/2 bg-primary-500 rounded-md">
+        <Result :close="closeDialog" :speed="(input.split(' ').length)"
+          :accuracy="((input.length - errors) / TEXT.length) * 100" @close="closeDialog" />
+      </dialog>
    </div>
  </DefaultLayout>
 </template>
-
-<style scoped>
-.timer-parent {
-  display: flex;
-  flex-direction: column;
-  justify-items: center;
-}
-
-.timer-header {
-  color: #f2f2f2;
-  font-size: 20px;
-  margin: 0;
-}
-
-.timer {
-  color: #606C6A;
-  font-size: 56px;
-  margin: 0;
-}
-
-.container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-dialog {
-  background-color: #121716;
-  border-style: none;
-  border-radius: 25px;
-  box-shadow: rgba(241, 241, 241, 0.24) 0px 3px 8px;
-}
-
-.p-container {
-  margin-top: 50px;
-  width: 800px;
-  padding: auto;
-}
-
-.control-container {
-  display: flex;
-  align-items: center;
-  padding: 10px;
-  margin-top: 40px;
-}
-
-.restart {
-  color: #f2f2f2;
-  font-size: 24px;
-  margin-left: 4px;
-}
-
-.control-container:hover {
-  cursor: pointer;
-  border-radius: 25px;
-  box-shadow: rgba(242, 242, 242, 0.35) 0px 5px 15px;
-}
-</style>
