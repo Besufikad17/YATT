@@ -1,4 +1,8 @@
-@font-face {
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* @font-face {
   font-family: "Open Sans", sans-serif; 
 }
 
@@ -13,4 +17,4 @@ body {
   margin: 0;
   padding: 0;
   background-color: #121716
-}
+} */
