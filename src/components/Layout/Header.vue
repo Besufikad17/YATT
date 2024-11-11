@@ -1,44 +1,24 @@
 <script setup lang="ts">
+  import { ref } from "vue";
   import { Icon } from "@iconify/vue";
+
+  const isLogged = ref(false);
 </script>
 
 <template>
-  <div class="parent">
-    <div class="logo">
-      <img src="../../assets/logo.png" width="120" height="40" />
-    </div>
-    <div class="links">
-      <a>Practice Mode</a>
-      <button class="flex items-center gap-2">
+  <div class="flex items-center justify-between p-4 bg-primary-950">
+    <span class="text-white text-2xl">YATT</span>
+    <div class="flex items-center gap-8">
+      <a href="/" class="flex items-center gap-2 text-primary-500">
         <Icon icon="material-symbols:home-outline" />
         Home
+      </a>
+      <a v-if="isLogged" href="/stats" class="flex items-center gap-2 text-primary-500">
+        Stats
+      </a>
+      <button v-else class="flex items-center justify-center focus:outline-none focus:ring-0 text-primary-500">
+        Login
       </button>
     </div>
   </div>
 </template>
-
-<style scoped>
-.parent {
-  height: 50%;
-  overflow: hidden;
-  padding: 20px 200px;
-  background-color: #121716;
-}
-
-.logo {
-  float: left;
-  margin-left: 10px;
-}
-
-.links {
-  float: right;
-  margin-left: 5px;
-}
-
-.links a {
-  text-decoration: none;
-  color: #606C6A;
-  text-align: center;
-  padding: 12px;
-}
-</style>

@@ -2,7 +2,7 @@
   import { onMounted, ref } from "vue";
   import { Icon } from "@iconify/vue";
   import { SPECIAL_KEYS, TEXT } from "../composables/constants/strings";
-  import Header from "../components/Layout/Header.vue";
+  import DefaultLayout from "../layouts/default.vue";
   import Result from "./Result.vue";
 
   const index = ref(0);
@@ -79,28 +79,29 @@
 </script>
 
 <template>
-  <Header />
-  <div class="container">
-    <div class="timer-parent">
-      <p class="timer-header">TIMER</p>
-      <p class="timer">{{ timer > 9 ? timer : "0" + timer }}</p>
-    </div>
-    <div class="p-container">
-      <p>
-        <span v-for="(char, index) in input" :key="index" :style="{ 'color': getLetterColor(char, index) }">{{ char
-          }}</span>
-        <span v-for="(char, _) in TEXT.slice(index, TEXT.length)" style="color: #606C6A;">{{ char }}</span>
-      </p>
-    </div>
-    <div class="control-container" @click="reset">
-      <Icon icon="mdi:reload" />
-      <span class="restart">Start Over</span>
-    </div>
-    <dialog :open="dialog || timer == 0">
-      <Result :close="closeDialog" :speed="(input.split(' ').length)"
-        :accuracy="((input.length - errors) / TEXT.length) * 100" />
-    </dialog>
-  </div>
+ <DefaultLayout>
+   <div class="container">
+     <div class="timer-parent">
+       <p class="timer-header">TIMER</p>
+       <p class="timer">{{ timer > 9 ? timer : "0" + timer }}</p>
+     </div>
+     <div class="p-container">
+       <p>
+         <span v-for="(char, index) in input" :key="index" :style="{ 'color': getLetterColor(char, index) }">{{ char
+           }}</span>
+         <span v-for="(char, _) in TEXT.slice(index, TEXT.length)" style="color: #606C6A;">{{ char }}</span>
+       </p>
+     </div>
+     <div class="control-container" @click="reset">
+       <Icon icon="mdi:reload" />
+       <span class="restart">Start Over</span>
+     </div>
+     <dialog :open="dialog || timer == 0">
+       <Result :close="closeDialog" :speed="(input.split(' ').length)"
+         :accuracy="((input.length - errors) / TEXT.length) * 100" />
+     </dialog>
+   </div>
+ </DefaultLayout>
 </template>
 
 <style scoped>
