@@ -1,23 +1,18 @@
-<script scoped lang="ts">
-import Button from "./Button.vue";
-import { defineComponent } from 'vue';
-
-export default defineComponent({
-  components: {
-    Button
-  }
-});
+<script setup lang="ts">
+  import { Icon } from "@iconify/vue";
 </script>
 
 <template>
   <div class="parent">
     <div class="logo">
-      <img src="../assets/logo.png" width="120" height="40" />
+      <img src="../../assets/logo.png" width="120" height="40" />
     </div>
     <div class="links">
       <a>Practice Mode</a>
-      <Button text="Home" width="80px" height="30px" bgColor="#282828" fgColor="#02BB86" borderRadius="15px"
-        fontSize="14px" />
+      <button class="flex items-center gap-2">
+        <Icon icon="material-symbols:home-outline" />
+        Home
+      </button>
     </div>
   </div>
 </template>

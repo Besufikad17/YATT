@@ -1,94 +1,81 @@
-<script lang="ts">
-import Header from "./Header.vue";
-import Result from "./Result.vue";
-import ReloadIcon from "./icons/Reload.vue";
+<script setup lang="ts">
+  import { onMounted, ref } from "vue";
+  import { Icon } from "@iconify/vue";
+  import { SPECIAL_KEYS, TEXT } from "../composables/constants/strings";
+  import Header from "../components/Layout/Header.vue";
+  import Result from "./Result.vue";
 
-export default {
-  data() {
-    return {
-      index: 0,
-      errors: 0,
-      timer: 60,
-      isPaused: true,
-      dialog: false,
-      input: "",
-      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-      specialKeys: ["Meta", "Shift", "Control", "Alt", "Escape", "PageUp", "PageDown", "Home", "End", "ArrowUp", "ArrowDown", "ArrowRight", "ArrowLeft", "Tab", "CapsLock", "Delete", "Insert", "Pause", "ScrollLock"]
+  const index = ref(0);
+  const errors = ref(0);
+  const timer = ref(60);
+  const isPaused = ref(false);
+  const dialog = ref(false);
+  const input = ref("");
+
+  const countDownTimer = () => {
+    if (timer.value > 0 && isPaused.value) {
+      setTimeout(() => {
+        timer.value -= 1
+        countDownTimer()
+      }, 1000)
     }
-  },
-  methods: {
-    countDownTimer() {
-      if (this.timer > 0 && !this.isPaused) {
-        setTimeout(() => {
-          this.timer -= 1
-          this.countDownTimer()
-        }, 1000)
-      }
+  }
 
-    },
-    onKeyPressed(key: string) {
-      if (this.specialKeys.indexOf(key) === -1 && this.timer > 0) {
-        if (key === "Backspace") {
-          this.erase();
-        } else {
-          this.input = this.input + key;
-          if (key !== this.text[this.index]) {
-            this.errors++;
-          }
-          this.index++;
-        }
-      }
-    },
-    erase() {
-      if (this.input.length > 0 && this.index > 0) {
-        this.input = this.input.slice(0, this.input.length - 1);
-        this.index--;
-      }
-    },
-    getLetterColor(char: string, index: number) {
-      if (index > this.input.length) {
-        return "#606C6A";
-      } else if (this.text[index] == char) {
-        return "#02BB86";
+  const onKeyPressed = (key: string) => {
+    if (SPECIAL_KEYS.indexOf(key) === -1 && timer.value > 0) {
+      if (key === "Backspace") {
+        erase();
       } else {
-        return "#FF6668";
-      }
-    },
-    updateTimer() {
-      this.timer--;
-    },
-    reset() {
-      this.isPaused = true;
-      this.input = "";
-      this.index = 0;
-      this.timer = 60;
-    },
-    closeDialog() {
-      this.dialog = false;
-      this.reset();
-    }
-  },
-  components: {
-    Header,
-    Result,
-    ReloadIcon
-  },
-  created() {
-    this.countDownTimer()
-  },
-  mounted() {
-    let self = this;
-    window.addEventListener('keyup', function (ev) {
-      if (self.specialKeys.indexOf(ev.key) === -1 && self.timer > 0) {
-        if (self.isPaused) {
-          self.isPaused = false;
-          self.countDownTimer();
+        input.value = input.value + key;
+        if (key !== TEXT[index.value]) {
+          errors.value++;
         }
-        self.onKeyPressed(ev.key);
+        index.value++;
+      }
+    }
+  }
+
+  const erase = () => {
+    if (input.value.length > 0 && index.value > 0) {
+      input.value = input.value.slice(0, input.value.length - 1);
+      index.value--;
+    }
+  }
+
+  const getLetterColor = (char: string, index: number) => {
+    if (index > input.value.length) {
+      return "#606C6A";
+    } else if (TEXT[index] == char) {
+      return "#02BB86";
+    } else {
+      return "#FF6668";
+    }
+  }
+
+  const reset = () => {
+    isPaused.value = true;
+    input.value = "";
+    index.value = 0;
+    timer.value = 60;
+  }
+
+  const closeDialog = () => {
+    dialog.value = false;
+    reset();
+  }
+
+  onMounted(() => {
+    countDownTimer();
+    window.addEventListener('keyup', function (ev) {
+      if (SPECIAL_KEYS.indexOf(ev.key) === -1 && timer.value > 0) {
+        if (isPaused.value) {
+          isPaused.value = false;
+          countDownTimer();
+        }
+        onKeyPressed(ev.key);
       }
     });
-  }
-}
+  });
 </script>
 
 <template>
@@ -102,16 +89,16 @@ export default {
       <p>
         <span v-for="(char, index) in input" :key="index" :style="{ 'color': getLetterColor(char, index) }">{{ char
           }}</span>
-        <span v-for="(char, _) in text.slice(index, text.length)" style="color: #606C6A;">{{ char }}</span>
+        <span v-for="(char, _) in TEXT.slice(index, TEXT.length)" style="color: #606C6A;">{{ char }}</span>
       </p>
     </div>
     <div class="control-container" @click="reset">
-      <ReloadIcon />
+      <Icon icon="mdi:reload" />
       <span class="restart">Start Over</span>
     </div>
     <dialog :open="dialog || timer == 0">
       <Result :close="closeDialog" :speed="(input.split(' ').length)"
-        :accuracy="((input.length - errors) / text.length) * 100" />
+        :accuracy="((input.length - errors) / TEXT.length) * 100" />
     </dialog>
   </div>
 </template>

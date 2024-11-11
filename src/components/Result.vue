@@ -1,9 +1,16 @@
 <script setup lang="ts">
-  defineProps<{
-    speed: number,
-    accuracy: number,
-    close: () => void
-  }>();
+  const emits = defineEmits(["close"]);
+
+  defineProps({
+    speed: {
+      type: Number,
+      required: true
+    },
+    accuracy: {
+      type: Number,
+      required: true
+    }
+  });
 </script>
 
 <template>
@@ -16,7 +23,7 @@
       <span>Accuracy: {{ accuracy.toFixed(2) }}%</span>
     </div>
     <div class="action-section">
-      <button class="close-button" @click="close">Close</button>
+      <button class="close-button" @click="emits('close')">Close</button>
     </div>
   </div>
 </template>
