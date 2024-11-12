@@ -1,10 +1,9 @@
 <script setup lang="ts">
-  import { onMounted, ref } from "vue";
+  import { onMounted, ref, watch } from "vue";
   import { Icon } from "@iconify/vue";
   import { SPECIAL_KEYS, TEXT } from "../composables/constants/strings";
   import DefaultLayout from "../layouts/default.vue";
   import Result from "./Result.vue";
-import { watch } from "vue";
 
   const index = ref(0);
   const errors = ref(0);
