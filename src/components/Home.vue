@@ -4,6 +4,7 @@
   import { SPECIAL_KEYS, TEXT } from "../composables/constants/strings";
   import DefaultLayout from "../layouts/default.vue";
   import Result from "./Result.vue";
+import { watch } from "vue";
 
   const index = ref(0);
   const errors = ref(0);
@@ -13,7 +14,7 @@
   const input = ref("");
 
   const countDownTimer = () => {
-    if (timer.value > 0 && isPaused.value) {
+    if (timer.value > 0 && !isPaused.value) {
       setTimeout(() => {
         timer.value -= 1
         countDownTimer()
@@ -68,16 +69,20 @@
   }
 
   onMounted(() => {
-    countDownTimer();
     window.addEventListener('keyup', function (ev) {
       if (SPECIAL_KEYS.indexOf(ev.key) === -1 && timer.value > 0) {
         if (isPaused.value) {
           isPaused.value = false;
-          countDownTimer();
         }
         onKeyPressed(ev.key);
       }
     });
+  });
+
+  watch(isPaused, (value) => {
+    if (!value) {
+      countDownTimer();
+    }
   });
 </script>
 
